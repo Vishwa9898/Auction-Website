@@ -360,22 +360,23 @@ def async_bid(app, product, totaltime):
 
 
 def demo():
+    with app.app_context():
 
-    product = Product.query.all()
-    for p in product:
+        product = Product.query.all()
+        for p in product:
 
-        temp = p.timer.split()
-        time = temp[0].split(':')
-        date = temp[1].split('/')
+            temp = p.timer.split()
+            time = temp[0].split(':')
+            date = temp[1].split('/')
 
-        a = datetime(int(date[2]), int(date[0]), int(date[1]), int(time[0]), int(time[1]))
-        b = datetime(datetime.now().year, datetime.now().month, datetime.now().day, datetime.now().hour,datetime.now().minute)
-        c = a-b
-        if c.total_seconds()>0:
-            threading.Thread(target=async_bid, args=(app,p,c.total_seconds())).start()
-        else:
-            if p.status == "open":
-                threading.Thread(target=async_bid, args=(app, p, 0)).start()
+            a = datetime(int(date[2]), int(date[0]), int(date[1]), int(time[0]), int(time[1]))
+            b = datetime(datetime.now().year, datetime.now().month, datetime.now().day, datetime.now().hour,datetime.now().minute)
+            c = a-b
+            if c.total_seconds()>0:
+                threading.Thread(target=async_bid, args=(app,p,c.total_seconds())).start()
+            else:
+                if p.status == "open":
+                    threading.Thread(target=async_bid, args=(app, p, 0)).start()
 
 
 
